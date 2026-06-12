@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LANFUNNEL Analysis — GLP-1 Funnel Teardown</title>
+<style>
+:root{--ink:#1a2330;--ink2:#4a5868;--accent:#5551ff;--rw:#959CFF;--bg:#f6f7fa;--card:#fff;--line:#e3e7ee;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);margin:0;line-height:1.65;}
+.topbar{background:#13294b;color:#fff;padding:10px 20px;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.topbar a{color:#9fd0ff;text-decoration:none;font-weight:600;}
+.wrap{max-width:880px;margin:0 auto;padding:36px 22px 80px;}
+h1{font-size:30px;letter-spacing:-.5px;line-height:1.2;margin:0 0 4px;}
+h1+p strong{color:var(--accent);}
+h2{font-size:21px;margin-top:44px;padding-bottom:8px;border-bottom:3px solid var(--accent);}
+h3{font-size:17px;margin-top:30px;color:#13294b;}
+p,li{font-size:15px;color:var(--ink);}
+strong{color:#0f1722;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:14px 0;background:var(--card);}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+th{background:#eef0f7;font-size:12px;text-transform:uppercase;letter-spacing:.4px;}
+tr:nth-child(even) td{background:#fafbfd;}
+hr{border:none;border-top:1px solid var(--line);margin:34px 0;}
+ul{padding-left:22px;}
+@media print{.topbar{display:none;}body{background:#fff;}}
+@media(max-width:700px){table{display:block;overflow-x:auto;white-space:nowrap;}h1{font-size:24px;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span><b>RightWell</b> · Competitive Funnel Analysis · 2026-06-12</span>
+  <a href="./">→ View all funnel screenshots</a>
+</div>
+<div class="wrap">
+<h1>LANFUNNEL ANALYSIS — GLP-1 Funnel Teardown</h1>
+<p><strong>Funnels analyzed (mobile, walked end-to-end 2026-06-11):</strong> RightWell (ours), TrimRx, DirectMeds, RemedyMeds
+<strong>Evidence:</strong> full screenshot walkthroughs at https://davidlaniado1.github.io/rightwell-glp-funnel-comparison/</p>
+<hr />
+<h2>1. EXECUTIVE SUMMARY</h2>
+<p><strong>Best overall funnel:</strong> RemedyMeds — 8.5/10
+<strong>Best hook:</strong> RemedyMeds — "Your weight isn't a willpower problem. It's a medical one." Removes blame in one sentence and installs the belief that medication is the rational answer.
+<strong>Best offer:</strong> TrimRx — "$0 Due Today. Only charged if your prescription is approved." Strongest possible answer to card-entry fear.
+<strong>Best price framing:</strong> DirectMeds entry ($147 prescribed-for-only framing), but it's a trap — $297/mo flat after. Best honest framing: RemedyMeds "$120 off + warranty" with savings math on the pay screen.
+<strong>Best trust framing:</strong> TrimRx — Forbes/WebMD/Yahoo/NY Post masthead pinned on all 36 quiz screens. Trust never leaves the viewport.
+<strong>Best medical credibility:</strong> RemedyMeds — JAMA citation, member-outcome stats with methodology disclosure, clinician headshot in the quiz, "why we ask this" under every question.
+<strong>Best quiz flow:</strong> RemedyMeds — 16 screens, each one personalizes (pace selector, projection graph), eligibility "Approved" shown before contact capture.
+<strong>Best checkout bridge:</strong> RemedyMeds — quiz → "Clinical Match" recap → "Eligibility: Approved" → congrats page → coupon reveal → plan cards → Stripe. Zero dead steps.
+<strong>Best membership framing:</strong> RightWell (ours) — 3/6/12-month plans with 0% Klarna installments beats everyone's flat monthly. Nobody else has a real LTV ladder except TrimRx.
+<strong>Highest compliance risk:</strong> DirectMeds — "approval valid for 29:56" fake deadline, "easily lose 44 lbs" calculator, "80% less" compounded claims, $147→$297 price jump built for chargebacks.
+<strong>Biggest missed opportunity for RightWell:</strong> Our quiz is a bare corridor. 18 text-only slides with a naked logo header while every competitor runs persistent trust badges, photos, and personalization on every screen. We built the shortest funnel and filled it with the weakest slides.
+<strong>Final recommendation:</strong> Keep our skeleton (shortest path, plan ladder, oral option, gift). Transplant RemedyMeds' slide quality and TrimRx's "$0 due today" + persistent trust header. Do not import anyone's fake countdowns — we already have a timer, don't escalate.</p>
+<hr />
+<h2>2. FUNNEL RANKING TABLE</h2>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Funnel</th>
+<th>Score</th>
+<th>Why it ranks there</th>
+<th>Best idea to steal</th>
+<th>Main weakness</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>RemedyMeds</td>
+<td>8.5</td>
+<td>Best big idea, best per-slide quality, cleanest checkout bridge, claims are cited and disclaimed</td>
+<td>Approval shown <em>before</em> asking for contact info</td>
+<td>Flat $299/mo, no plan ladder</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>2</td>
+<td>TrimRx</td>
+<td>7.5</td>
+<td>Conversion machine: trust masthead everywhere, 3 photo testimonials, "$0 due today"</td>
+<td>$0-due-today charge-on-approval</td>
+<td>36 screens of fatigue; fabricated scarcity</td>
+<td>Medium-High</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RightWell (ours)</td>
+<td>7.0</td>
+<td>Best plan ladder + gift + guarantee, shortest quiz — but thinnest slides and priciest entry</td>
+<td>—</td>
+<td>Quiz has zero trust or imagery; $199 entry loses the price shopper</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>4</td>
+<td>DirectMeds</td>
+<td>6.5</td>
+<td>TrimRx template clone with a cheaper hook and a smart bump, undermined by aggressive fake urgency and a price trap</td>
+<td>$49.95 "Skip the Line" bump</td>
+<td>$147→$297 jump; weakest credibility</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. INDIVIDUAL FUNNEL ANALYSIS</h2>
+<h3>RemedyMeds — 8.5/10</h3>
+<p><strong>Wants the customer to believe:</strong> Obesity is biology (food noise, hormones, weight cycling), not willpower — so medication plus clinicians is the logical fix, and the only risk is not starting (warranty).
+<strong>Why the hook works:</strong> It reframes blame in the first sentence. Every competitor sells a discount; Remedy sells a belief. The $120-off banner rides on top without being the message.
+<strong>What creates desire:</strong> The pace selector (you choose 3/6/12 months) and the personalized projection ("Lose 32 lbs by December 11") make the result feel scheduled, not hoped for.
+<strong>What creates trust:</strong> JAMA citation, outcome stats with methodology footnotes, Trustpilot 4.7 pinned on every slide, clinician headshot, real care phone number in the header, "why we ask" microcopy.
+<strong>What creates doubt:</strong> $299/mo flat recurring lands only at checkout; microdose/name-brand lines add choice overload on the lander.
+<strong>Where it loses momentum:</strong> The approved page is long — congrats hero to plan cards is a lot of scrolling before price.
+<strong>Best section:</strong> Quiz (16 screens, every one earns its place). <strong>Weakest section:</strong> Lander product-line pickers (4 options before the quiz is premature).
+<strong>Best copy idea:</strong> "If it doesn't work, you don't pay." <strong>Best design idea:</strong> Warranty seal ON the Complete Purchase button. <strong>Best offer idea:</strong> Refunded if not prescribed.
+<strong>RightWell should copy:</strong> Approval-before-contact-capture sequencing; why-we-ask microcopy; warranty on the pay button.
+<strong>RightWell should not copy:</strong> Flat monthly pricing — our plan ladder out-monetizes it.
+<strong>Priority recommendation:</strong> This is the funnel to model for slide quality.</p>
+<h3>TrimRx — 7.5/10</h3>
+<p><strong>Wants the customer to believe:</strong> This is the trusted, press-vetted GLP-1 brand, you have nothing to risk because you pay nothing today.
+<strong>Why the hook works/fails:</strong> The pre-lander ("What is your weight loss goal?") is a serviceable click-commitment gate but installs no idea. The funnel's real hook is at checkout: $0 due today.
+<strong>What creates desire:</strong> Three before/after photo testimonials timed between question blocks; personalized "Losing 32lbs is easier than you think."
+<strong>What creates trust:</strong> Forbes/WebMD/Yahoo masthead on every screen; Yahoo "Best Overall 9.8" interstitial; the medical depth itself (BP, heart rate) reads clinical.
+<strong>What creates doubt:</strong> "Only 31 discounts left… reserved for 9:38" and "12,256 chose this today" smell manufactured to anyone paying attention.
+<strong>Where it loses momentum:</strong> Screens 20–35. Nine yes/no medical screens in a row with no break is where dropoff lives.
+<strong>Best section:</strong> Checkout step 3 ($0 due today + code applied). <strong>Weakest section:</strong> The mid-quiz medical slog.
+<strong>Best copy idea:</strong> "$0 Due Today — only charged if your prescription is approved." <strong>Best design idea:</strong> Persistent press masthead. <strong>Best offer idea:</strong> First-month anchor $299→$159.
+<strong>RightWell should copy:</strong> $0-due-today framing; persistent trust header; photo testimonials in-quiz.
+<strong>RightWell should not copy:</strong> 36-screen length; fabricated discount-inventory scarcity.
+<strong>Priority recommendation:</strong> Steal the charge-on-approval mechanic before anyone else in our lane does.</p>
+<h3>DirectMeds — 6.5/10</h3>
+<p><strong>Wants the customer to believe:</strong> Same medication as the big brands, $147, delivered in 2 days — a price-and-speed play.
+<strong>Why the hook works/fails:</strong> "$147" with a weight-loss calculator is a strong cold-traffic price hook. But the funnel is a word-for-word TrimRx template clone, executed with less polish and more aggression.
+<strong>What creates desire:</strong> The interactive "you could easily lose 44 lbs" slider; cheapest entry of the four.
+<strong>What creates trust:</strong> 200k customers claim, FAQ depth, in-house nursing-staff claim.
+<strong>What creates doubt:</strong> "SARAH'S APPROVAL IS VALID FOR 29:56" — approval that expires in half an hour reads fake because it is. The $147→$297/mo jump is in the order summary fine print.
+<strong>Where it loses momentum:</strong> Nowhere structurally (it's the proven template) — it leaks at credibility, not flow.
+<strong>Best section:</strong> The $49.95 "Skip the Line" order bump — the single smartest monetization idea across all four funnels. <strong>Weakest section:</strong> The 30-minute approval countdown.
+<strong>Best copy idea:</strong> "Your medication price never goes up — even when your dose increases." <strong>Best design idea:</strong> Recommendation block ("we recommend Semaglutide Weekly Injections… but you can choose"). <strong>Best offer idea:</strong> Skip-the-line bump.
+<strong>RightWell should copy:</strong> The bump; the personalized recommendation block.
+<strong>RightWell should not copy:</strong> Expiring-approval urgency; "easily lose 44 lbs"; entry-price bait with a hidden treadmill.
+<strong>Priority recommendation:</strong> Take the bump, leave everything else.</p>
+<h3>RightWell (ours) — 7.0/10</h3>
+<p><strong>Wants the customer to believe:</strong> Most trusted GLP-1 provider, big savings today, approved fast.
+<strong>Why the hook works/fails:</strong> The /get-started lander is efficient — promo banner, award badges, goal question above the fold. But "most trusted provider" is a category claim, not an idea. There's no belief being installed about <em>the buyer's problem</em>.
+<strong>What creates desire:</strong> $100 off + free ToneProtect gift; weight-projection graph on the approved page.
+<strong>What creates trust:</strong> Lander badges (Best of 2026, Trustpilot 4.7) — then trust goes silent for 17 quiz screens. The 92.8% "Medical Review" score is good gamification.
+<strong>What creates doubt:</strong> "Voted most trusted GLP-1 provider" sourced to TopIQ/Consumer Radar will not survive a skeptical buyer's google. "You are approved!" before any clinician saw anything.
+<strong>Where it loses momentum:</strong> The quiz interior. Logo-only header, no images, no social proof, no why-we-ask — 17 screens of blank corridor between a strong lander and a strong checkout.
+<strong>Best section:</strong> Checkout (gift + guarantee + plan ladder + Klarna + Apple Pay is the most complete offer stack of the four). <strong>Weakest section:</strong> Every quiz slide between entry and medical review.
+<strong>Priority recommendation:</strong> Fix slide quality first — it's the cheapest fix with the most surface area.</p>
+<hr />
+<h2>4. RIGHTWELL COMPETITIVE GAP ANALYSIS</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Current weakness</th>
+<th>Best competitor example</th>
+<th>Recommended fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hook</td>
+<td>Category claim ("most trusted"), no belief installed</td>
+<td>Remedy's "willpower → medical" reframe</td>
+<td>Add one belief line above the goal question: "Losing weight isn't a willpower problem. It's a medical one — and it's treatable."</td>
+</tr>
+<tr>
+<td>Big idea</td>
+<td>We sell a discount</td>
+<td>Remedy sells biology</td>
+<td>Carry the reframe through quiz interstitials, not just the lander</td>
+</tr>
+<tr>
+<td>Medical credibility</td>
+<td>No clinician presence until checkout</td>
+<td>Remedy's clinician headshot + why-we-ask</td>
+<td>Add provider photo + 1-line "why we ask" to each medical screen</td>
+</tr>
+<tr>
+<td>Price story</td>
+<td>$199 is the highest entry of 4; first price seen late</td>
+<td>TrimRx $159 / DM $147 entries</td>
+<td>Test $149–159 first month; surface "from $159/mo" on the lander</td>
+</tr>
+<tr>
+<td>GLP-1 access story</td>
+<td>Generic</td>
+<td>DM's "price never goes up with dose"</td>
+<td>Adopt the line — we already do same-price-all-doses; we just don't say it early</td>
+</tr>
+<tr>
+<td>Doctor/provider trust</td>
+<td>"You are approved!" with no provider visible</td>
+<td>TrimRx "$0 due today, charged only if approved"</td>
+<td>Reframe approval as conditional: "Pre-qualified — a licensed provider reviews before you're charged"</td>
+</tr>
+<tr>
+<td>Quiz flow</td>
+<td>Text-only slides, logo header</td>
+<td>TrimRx masthead, Remedy microcopy</td>
+<td>Persistent trust strip + images on every slide</td>
+</tr>
+<tr>
+<td>Membership value</td>
+<td>Strong ladder, weakly told</td>
+<td>Remedy's all-in-one inclusion stack</td>
+<td>Restate "everything included" at the plan cards, not just above them</td>
+</tr>
+<tr>
+<td>Checkout transition</td>
+<td>Good</td>
+<td>Remedy approval-before-contact</td>
+<td>Move the "Approved" moment before the email/phone screen</td>
+</tr>
+<tr>
+<td>Risk reversal</td>
+<td>Guarantee buried mid-page</td>
+<td>Remedy's warranty on the pay button</td>
+<td>Put "Backed by the RightWell Guarantee" on the Continue button</td>
+</tr>
+<tr>
+<td>Mobile simplicity</td>
+<td>Good (shortest funnel)</td>
+<td>—</td>
+<td>Don't add screens; add content density</td>
+</tr>
+<tr>
+<td>Compliance safety</td>
+<td>"Voted most trusted," unconditional "approved"</td>
+<td>—</td>
+<td>Soften both (see watchlist)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>5. BEST IDEAS TO STEAL (Top 10)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Source</th>
+<th>Idea</th>
+<th>Why it works</th>
+<th>How we adapt</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>TrimRx</td>
+<td>$0 due today, charged on approval</td>
+<td>Kills the #1 checkout fear</td>
+<td>Authorize card, charge after provider approval</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DirectMeds</td>
+<td>$49.95 Skip-the-Line bump</td>
+<td>Pure AOV from committed buyers</td>
+<td>"Priority provider review" toggle at checkout</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Remedy</td>
+<td>Approval before contact capture</td>
+<td>Approval becomes the bribe for the lead</td>
+<td>Show "Eligible ✓" screen, then ask email/phone</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>4</td>
+<td>TrimRx</td>
+<td>Press masthead on every slide</td>
+<td>Trust never leaves the screen</td>
+<td>Trustpilot + award strip in quiz header</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Remedy</td>
+<td>Why-we-ask microcopy</td>
+<td>Makes intake feel clinical, not nosy</td>
+<td>One grey line under each medical question</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>6</td>
+<td>TrimRx/DM</td>
+<td>Photo before/after testimonials mid-quiz</td>
+<td>Visual proof at fatigue points</td>
+<td>2 testimonial breaks with disclaimered photos</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Remedy</td>
+<td>Warranty on the pay button</td>
+<td>Risk reversal at the exact moment of fear</td>
+<td>"Backed by the RightWell Guarantee 🔒" on Continue</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Remedy</td>
+<td>Pace selector + dated projection</td>
+<td>Buyer commits to their own timeline</td>
+<td>"Reach 160 lbs by [date]" graph after goal weight</td>
+<td>Medium (implied promise)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>DirectMeds</td>
+<td>"Price never goes up with your dose"</td>
+<td>Defuses the dose-creep cost fear</td>
+<td>We already price this way — say it on plan cards</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>10</td>
+<td>DirectMeds</td>
+<td>Recommendation block ("we recommend Sema… you choose")</td>
+<td>Authority + autonomy at once</td>
+<td>Personalized rec above our med cards</td>
+<td>Low</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>6. WHAT TO REMOVE OR AVOID</h2>
+<ul>
+<li><strong>Fabricated inventory scarcity</strong> ("Only 31 discounts left" — TrimRx). Weak because it's checkably false; trains buyers to distrust the whole page. Compliance: deceptive-practice exposure (FTC).</li>
+<li><strong>Expiring approval</strong> ("valid for 29:56" — DirectMeds). Medical approval that lapses in 30 minutes reads fake and cheapens the clinical story. Compliance: misleading urgency.</li>
+<li><strong>Live "chose this today" counters</strong> (TrimRx). Unverifiable, increasingly recognized as fake. Same FTC exposure.</li>
+<li><strong>Entry-price bait with flat treadmill</strong> (DM $147→$297). Converts the click, then manufactures month-2 chargebacks and refunds. We monetize with a visible ladder instead — keep it.</li>
+<li><strong>36-screen intake</strong> (TrimRx). Sunk cost works until fatigue beats it; we win on speed — don't trade it away.</li>
+</ul>
+<hr />
+<h2>7. COMPLIANCE WATCHLIST</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Where</th>
+<th>Why it matters</th>
+<th>Level</th>
+<th>Safer alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"You are approved!" before provider review</td>
+<td>RightWell checkout, DM/RM variants</td>
+<td>Implies prescription decision pre-consult — telehealth/practice-of-medicine problem</td>
+<td>High</td>
+<td>"Pre-qualified — final approval by a licensed provider"</td>
+</tr>
+<tr>
+<td>Weight-loss guarantees tied to lbs ("lose 32 lbs or 100% back")</td>
+<td>RM warranty, RW 10%-in-4-months, DM refund</td>
+<td>Outcome promises on Rx drugs invite FTC + board scrutiny</td>
+<td>High</td>
+<td>Keep refund, frame around program satisfaction not lbs</td>
+</tr>
+<tr>
+<td>"Voted most trusted GLP-1 provider 2026"</td>
+<td>RightWell lander</td>
+<td>Award from non-notable rating sites = unsubstantiated superiority claim</td>
+<td>Medium</td>
+<td>"Rated Excellent 4.7 on Trustpilot" (verifiable)</td>
+</tr>
+<tr>
+<td>Specific loss-rate promises ("you'll lose 1.92–3.84 lbs/week")</td>
+<td>TrimRx/DM template</td>
+<td>Individualized efficacy claims without individualized basis</td>
+<td>High</td>
+<td>"Patients typically lose X% over Y months in studies" + citation</td>
+</tr>
+<tr>
+<td>Before/after photos with lbs claims</td>
+<td>TrimRx, DM testimonials</td>
+<td>Atypical-results problem; needs clear disclosure</td>
+<td>Medium</td>
+<td>Use only with "results vary" + typicality disclosure</td>
+</tr>
+<tr>
+<td>Fake countdowns/counters</td>
+<td>TrimRx, DM, our refresh timer</td>
+<td>Deceptive urgency</td>
+<td>Medium</td>
+<td>Real, honest deadlines only (promo end dates)</td>
+</tr>
+<tr>
+<td>Compounded "same ingredient, 80% less"</td>
+<td>DirectMeds</td>
+<td>FDA has warned on compounded-equivalence claims</td>
+<td>High</td>
+<td>Remedy's approach: disclose compounding + FDA non-evaluation plainly</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>8. PRIORITY ACTION PLAN</h2>
+<p><strong>Priority 1 — "$0 due today" charge-on-approval at checkout.</strong>
+What to change: authorize the card at checkout, charge only after provider approval; say so in the order summary.
+Why: removes the single biggest fear at the single highest-stakes moment; TrimRx proves it's operationally doable.
+Where: our payment section.
+Expected impact: highest of any single test (card-entry → purchase rate).
+Difficulty: Medium (billing logic). Risk: Low.</p>
+<p><strong>Priority 2 — Quiz slide upgrade: trust strip + images + why-we-ask.</strong>
+What to change: persistent Trustpilot/award header, clinician photo, one-line "why we ask" on medical screens, 1–2 image interstitials.
+Why: 17 of our screens currently do zero persuasion; every competitor works every slide.
+Where: all quiz screens.
+Expected impact: quiz completion rate, especially mid-funnel.
+Difficulty: Low (Heyflow edits). Risk: Low.</p>
+<p><strong>Priority 3 — First-month price test $149–159.</strong>
+What to change: monthly plan card anchor $299→$149-159 (vs current $199).
+Why: we're the most expensive entry of four funnels selling the same molecule; price shoppers never reach our (superior) plan ladder.
+Where: monthly plan card + surface "from $159/mo" on the lander.
+Expected impact: high on cold-traffic CVR; protects LTV via existing ladder.
+Difficulty: Low. Risk: Low (margin math first).</p>
+<p><strong>Priority 4 — $49.95 Priority Review bump.</strong>
+What to change: optional "priority provider review" toggle below card fields.
+Why: found money from already-committed buyers; nobody else in our funnel does it except DM.
+Where: checkout, below card fields.
+Expected impact: +AOV on every order that takes it, no CVR cost if optional.
+Difficulty: Low–Medium (ops must actually deliver fast review). Risk: Low.</p>
+<p><strong>Priority 5 — Reframe "You are approved!" + guarantee on the pay button.</strong>
+What to change: "Pre-qualified — a licensed provider reviews before you're charged" + "Backed by the RightWell Guarantee 🔒" on the Continue button.
+Why: kills our biggest compliance exposure and adds risk-reversal at the moment of fear in one edit.
+Where: checkout hero + Continue button.
+Expected impact: neutral-to-positive CVR, large risk reduction.
+Difficulty: Low. Risk: Reduces risk.</p>
+<hr />
+<h2>9. FINAL CEO DECISION</h2>
+<p><strong>Best funnel to model:</strong> RemedyMeds — for slide quality and checkout bridge, not pricing.
+<strong>Best section to copy:</strong> TrimRx checkout step 3 ($0 due today + code-applied summary).
+<strong>Biggest RightWell weakness:</strong> An empty quiz — shortest path, thinnest persuasion.
+<strong>Fastest fix:</strong> Trust strip + why-we-ask microcopy on every quiz slide (days, not weeks).
+<strong>Highest-impact test:</strong> Charge-on-approval billing.
+<strong>Biggest compliance concern:</strong> Unconditional "You are approved!" before provider review, plus the lbs-specific guarantee.
+<strong>Do not do this:</strong> Import fake scarcity (discount inventory, expiring approvals, live counters) or copy DirectMeds' bait-entry pricing. Our plan ladder is the honest version of the same economics — keep it.</p>
+</div>
+</body>
+</html>
