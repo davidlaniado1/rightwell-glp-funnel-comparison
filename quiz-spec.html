@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RightWell Intake Quiz — Build Spec</title>
+<style>
+:root{--ink:#1a2330;--accent:#39345C;--rw:#959CFF;--bg:#f6f7fa;--line:#e3e7ee;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);margin:0;line-height:1.65;}
+.topbar{background:var(--accent);color:#fff;padding:10px 20px;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.topbar a{color:var(--rw);text-decoration:none;font-weight:600;}
+.wrap{max-width:880px;margin:0 auto;padding:36px 22px 80px;}
+h1{font-size:28px;letter-spacing:-.5px;line-height:1.25;margin:0 0 4px;}
+h2{font-size:20px;margin-top:44px;padding-bottom:8px;border-bottom:3px solid var(--rw);}
+h3{font-size:16.5px;margin-top:30px;color:var(--accent);}
+p,li{font-size:14.5px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0;background:#fff;}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top;}
+th{background:#eef0f7;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;}
+tr:nth-child(even) td{background:#fafbfd;}
+blockquote{background:#fff;border-left:4px solid var(--rw);margin:14px 0;padding:12px 16px;border-radius:0 8px 8px 0;}
+hr{border:none;border-top:1px solid var(--line);margin:34px 0;}
+ul{padding-left:22px;}
+code{background:#eceef4;padding:1px 5px;border-radius:4px;font-size:12.5px;}
+@media print{.topbar{display:none;}body{background:#fff;}}
+@media(max-width:700px){table{display:block;overflow-x:auto;}h1{font-size:23px;}}
+</style></head><body>
+<div class="topbar"><span><b>RightWell</b> · Intake Quiz Build Spec · 2026-06-12</span>
+<span><a href="report.html">Analysis report</a> &nbsp;·&nbsp; <a href="./">Funnel screenshots</a></span></div>
+<div class="wrap"><h1>RightWell Intake Quiz — Full Build Spec</h1>
+<p><strong>Version 1.0 · 2026-06-12 · Short-form GLP-1 / weight management intake</strong>
+Owner: Growth (David). Audience: design, engineering, compliance, care-ops.</p>
+<p>Guiding idea: this is a <strong>guided health check</strong>, not paperwork. Every screen either guides the user, builds trust in provider review, makes the next step easy, or moves toward completed submission. No urgency theater, no guarantees, no "approved" language.</p>
+<hr />
+<h2>1. SCREEN-BY-SCREEN QUIZ FLOW</h2>
+<p><strong>Global rules (apply to every screen):</strong>
+- One question per screen. Headline ≤ 9 words. Helper ≤ 2 short lines.
+- Persistent header: RightWell logo + thin progress bar + small trust strip ("Reviewed by licensed providers · Private &amp; secure").
+- Single-select option buttons auto-advance on tap. Multi-select and inputs use a sticky <strong>Continue</strong> button.
+- Back = "←" arrow, top left, every screen after Screen 1.
+- Progress bar advances visibly on every screen (23 segments, optional screens collapse).
+- Footer on data screens: 🔒 "Your answers are private and protected."</p>
+<hr />
+<h3>Screen 1 — Start</h3>
+<ul>
+<li><strong>Purpose:</strong> Set expectations, install guidance frame, start momentum.</li>
+<li><strong>Headline:</strong> A clearer path to medical weight management.</li>
+<li><strong>Subheadline:</strong> Answer a few questions so a licensed provider can review whether the RightWell program may be appropriate for you.</li>
+<li><strong>Trust line:</strong> Provider-reviewed · Private &amp; secure · Takes about 3 minutes</li>
+<li><strong>Privacy reassurance:</strong> Your health information is used only for your review and care. We don't sell it.</li>
+<li><strong>Field type:</strong> None (CTA only).</li>
+<li><strong>CTA:</strong> Start my health check →</li>
+<li><strong>RightWell value note:</strong> First impression = guided program, not a drug form.</li>
+<li><strong>Design notes:</strong> Calm hero, no product imagery of vials at this stage. CTA above the fold.</li>
+<li><strong>Compliance notes:</strong> No "qualify/approved/guaranteed," no weight-loss numbers. ✔ as written.</li>
+<li><strong>API mapping:</strong> <code>session_start</code> event; create <code>intake_session_id</code>.</li>
+</ul>
+<h3>Screen 2 — Primary goal</h3>
+<ul>
+<li><strong>Purpose:</strong> Easiest possible first answer; commitment seed.</li>
+<li><strong>Headline:</strong> What's your main goal right now?</li>
+<li><strong>Why we ask:</strong> Your goal helps the care team understand what you're working toward.</li>
+<li><strong>Field type:</strong> Single-select (auto-advance).</li>
+<li><strong>Options:</strong> Weight loss · Gain muscle · Maintain my current body</li>
+<li><strong>Validation:</strong> One selection required. <strong>Error:</strong> "Please choose the goal that fits best."</li>
+<li><strong>Conditional logic:</strong> None.</li>
+<li><strong>Continue:</strong> auto-advance · <strong>Back:</strong> none (first question)</li>
+<li><strong>Value note:</strong> Feels personal from question one.</li>
+<li><strong>API:</strong> <code>primary_goal</code> (enum: weight_loss | gain_muscle | maintain).</li>
+</ul>
+<h3>Screen 3 — Motivation</h3>
+<ul>
+<li><strong>Purpose:</strong> Deepen commitment; provider context.</li>
+<li><strong>Headline:</strong> What's your main reason for taking this seriously now?</li>
+<li><strong>Why we ask:</strong> Knowing what matters to you helps your care team support you.</li>
+<li><strong>Field type:</strong> Single-select (auto-advance).</li>
+<li><strong>Options:</strong> I want to live longer · I want to look and feel better · I want to reduce current health issues · All of these</li>
+<li><strong>Validation:</strong> Required. <strong>Error:</strong> "Please pick the reason that fits best."</li>
+<li><strong>API:</strong> <code>primary_reason</code> (enum).</li>
+</ul>
+<h3>Screen 4 — Height</h3>
+<ul>
+<li><strong>Purpose:</strong> First clinical data point, kept effortless.</li>
+<li><strong>Headline:</strong> How tall are you?</li>
+<li><strong>Why we ask:</strong> Height and weight help calculate your BMI — one of several factors a provider considers.</li>
+<li><strong>Field type:</strong> Two number inputs (Feet dropdown 3–7, Inches dropdown 0–11).</li>
+<li><strong>Helper text:</strong> Just your best answer is fine.</li>
+<li><strong>Validation:</strong> Feet 3–7 and inches 0–11 required. <strong>Error:</strong> "Please enter your height so a provider can review safely."</li>
+<li><strong>Continue:</strong> Continue →</li>
+<li><strong>Design notes:</strong> Big steppers/dropdowns; numeric keyboard not needed.</li>
+<li><strong>API:</strong> <code>height_feet</code> (int), <code>height_inches</code> (int).</li>
+</ul>
+<h3>Screen 5 — Weight</h3>
+<ul>
+<li><strong>Headline:</strong> What's your current weight?</li>
+<li><strong>Why we ask:</strong> This helps a provider review your information accurately.</li>
+<li><strong>Field type:</strong> Number input (lbs).</li>
+<li><strong>Helper text:</strong> An estimate is okay — you can update it later.</li>
+<li><strong>Reassurance:</strong> No judgment here. This is just a starting point.</li>
+<li><strong>Validation:</strong> Integer 50–700. <strong>Errors:</strong> empty → "Please enter your weight to continue." · out of range → "That doesn't look right — please double-check your weight in pounds."</li>
+<li><strong>Design notes:</strong> Numeric keypad. Auto-compute BMI client-side; do <strong>not</strong> display eligibility messaging.</li>
+<li><strong>Compliance notes:</strong> Do not show "you qualify" based on BMI. A neutral "Thanks — that gives your provider a starting point" interstitial line is allowed.</li>
+<li><strong>API:</strong> <code>weight_lbs</code> (int); <code>bmi</code> computed server-side as source of truth.</li>
+</ul>
+<h3>Screen 6 — Gender</h3>
+<ul>
+<li><strong>Headline:</strong> What's your sex assigned at birth?</li>
+<li><strong>Why we ask:</strong> This helps a provider personalize the safety review.</li>
+<li><strong>Field type:</strong> Single-select (auto-advance). <strong>Options:</strong> Male · Female</li>
+<li><strong>Validation:</strong> Required. <strong>Error:</strong> "Please select an option to continue."</li>
+<li><strong>Conditional logic:</strong> Sets visibility of Screen 11 (pregnancy).</li>
+<li><strong>API:</strong> <code>gender</code> (enum: male | female).</li>
+</ul>
+<h3>Screen 7 — Prior weight-loss program history</h3>
+<ul>
+<li><strong>Headline:</strong> Have you tried a weight management program before?</li>
+<li><strong>Why we ask:</strong> What you've already tried helps the care team understand your history.</li>
+<li><strong>Field type:</strong> Yes/No (auto-advance).</li>
+<li><strong>Reassurance:</strong> Plenty of people have tried before. That history is useful, not a mark against you.</li>
+<li><strong>Validation:</strong> Required. <strong>Error:</strong> "Please choose yes or no."</li>
+<li><strong>API:</strong> <code>prior_weight_loss_program</code> (bool).</li>
+</ul>
+<h3>Screen 8 — Trust transition (no inputs)</h3>
+<ul>
+<li><strong>Purpose:</strong> Prepare the user for clinical questions; reduce mid-quiz abandonment.</li>
+<li><strong>Headline:</strong> Nice progress. Next: a few health questions.</li>
+<li><strong>Body:</strong> Next, we'll ask a few health questions so a provider can review your information safely. Your answers help the care team understand what options may be appropriate.</li>
+<li><strong>Reassurance:</strong> There are no right or wrong answers — just accurate ones.</li>
+<li><strong>CTA:</strong> Continue →</li>
+<li><strong>Design notes:</strong> Optional small provider/care-team photo here (real staff or clearly representative imagery per legal guidance). Keep under 3 lines.</li>
+<li><strong>Compliance notes:</strong> No outcome claims.</li>
+<li><strong>API:</strong> <code>transition_viewed</code> event.</li>
+</ul>
+<h3>Screen 9 — Blood pressure</h3>
+<ul>
+<li><strong>Headline:</strong> What's your typical blood pressure range?</li>
+<li><strong>Why we ask:</strong> Blood pressure helps a provider review safety.</li>
+<li><strong>Field type:</strong> Single-select (auto-advance).</li>
+<li><strong>Options:</strong> Less than 120/80 (normal) · 120–129 / less than 80 (elevated) · 130–139 / 80–89 (high — stage 1) · 140/90 or higher (high — stage 2) · I don't know / haven't measured recently</li>
+<li><strong>Helper text:</strong> Your best estimate is fine.</li>
+<li><strong>Validation:</strong> Required. <strong>Error:</strong> "Please choose the closest option — 'I don't know' is okay."</li>
+<li><strong>Compliance notes:</strong> "I don't know" permitted pending clinical-partner confirmation; flag for provider follow-up rather than blocking.</li>
+<li><strong>API:</strong> <code>blood_pressure_range</code> (enum incl. <code>unknown</code>).</li>
+</ul>
+<h3>Screen 10 — Resting heart rate</h3>
+<ul>
+<li><strong>Headline:</strong> What's your typical resting heart rate?</li>
+<li><strong>Why we ask:</strong> This is another simple safety check for your provider.</li>
+<li><strong>Field type:</strong> Single-select (auto-advance).</li>
+<li><strong>Options:</strong> Less than 60 bpm (slow) · 60–100 bpm (normal) · 101–110 bpm (slightly fast) · More than 110 bpm (fast) · I don't know / haven't measured recently</li>
+<li><strong>Helper text:</strong> Many phones and watches can show this — but an estimate is fine.</li>
+<li><strong>Validation/Error:</strong> Same pattern as Screen 9.</li>
+<li><strong>API:</strong> <code>resting_heart_rate_range</code> (enum incl. <code>unknown</code>).</li>
+</ul>
+<h3>Screen 11 — Pregnancy / breastfeeding / recent childbirth <em>(shown only if gender = Female)</em></h3>
+<ul>
+<li><strong>Headline:</strong> Safety first — do any of these apply to you?</li>
+<li><strong>Why we ask:</strong> These questions protect your safety during provider review.</li>
+<li><strong>Field type:</strong> Multi-option, single-commit (selecting "None of the above" clears others).</li>
+<li><strong>Options:</strong> Currently or possibly pregnant · Breastfeeding or bottle-feeding with breastmilk · Have given birth within the last 6 months · None of the above</li>
+<li><strong>Reassurance:</strong> Whatever you select, a provider reviews your answers with care.</li>
+<li><strong>Validation:</strong> At least one selection. <strong>Error:</strong> "Please select all that apply, or 'None of the above.'"</li>
+<li><strong>Conditional logic:</strong> If gender = Male, skip and auto-set <code>pregnancy_status = not_applicable</code>.</li>
+<li><strong>Compliance notes:</strong> Do not display rejection messaging in-quiz; route to provider review or the clinical partner's defined off-ramp (see §10).</li>
+<li><strong>API:</strong> <code>pregnancy_status[]</code> (enum array; <code>not_applicable</code> for males).</li>
+</ul>
+<h3>Screen 12 — Severe medical conditions</h3>
+<ul>
+<li><strong>Headline:</strong> Do any of these apply to you?</li>
+<li><strong>Why we ask:</strong> These questions help a provider review safety. Select all that apply.</li>
+<li><strong>Field type:</strong> Multi-select with exclusive "None of the above."</li>
+<li><strong>Options (exact):</strong> End-stage kidney disease (on or about to be on dialysis) · End-stage liver disease / cirrhosis · Current suicidal thoughts or prior suicidal attempt · Active cancer — diagnosis, treatment, or remission within the last 5 years (excluding non-melanoma skin cancer) · History of organ transplant on anti-rejection medication · Severe gastrointestinal conditions (gastroparesis, blockage, or inflammatory bowel disease) · Current treatment for alcohol, opioid, or substance use disorder/dependence · None of the above</li>
+<li><strong>Helper text:</strong> Answering honestly keeps your review safe. Your answers are confidential.</li>
+<li><strong>Validation:</strong> ≥1 selection; "None" exclusive. <strong>Error:</strong> "Please select any that apply, or 'None of the above.'"</li>
+<li><strong>Design notes:</strong> Comfortable tap targets; long labels wrap, never truncate. If user selects "Current suicidal thoughts," show a quiet supportive line with the 988 lifeline. Coordinate exact copy with legal/clinical.</li>
+<li><strong>API:</strong> <code>severe_conditions[]</code> (enum array).</li>
+</ul>
+<h3>Screen 13 — Other medical conditions</h3>
+<ul>
+<li><strong>Headline:</strong> Any current or past conditions from this list?</li>
+<li><strong>Why we ask:</strong> This helps providers understand your health history. Select all that apply.</li>
+<li><strong>Field type:</strong> Multi-select with exclusive "None of the above."</li>
+<li><strong>Options (exact, in this order):</strong> Active gallbladder disease · Hypertension / high blood pressure · Sleep apnea · Type 2 diabetes (not on insulin) · Type 2 diabetes (on insulin) · Type 1 diabetes · Diabetic retinopathy · Use of a blood thinner (warfarin / Coumadin / Jantoven) · History of or current pancreatitis · Personal or family history of Medullary Thyroid Carcinoma (MTC) · High cholesterol or triglycerides · Severe depression · Liver disease, including fatty liver · Congestive heart failure · Urinary stress incontinence · Polycystic ovarian syndrome (PCOS) · Clinically proven low testosterone · Osteoarthritis · None of the above</li>
+<li><strong>Reassurance:</strong> Most people select at least one — that's normal and useful for your provider.</li>
+<li><strong>Validation/Error:</strong> Same pattern as Screen 12.</li>
+<li><strong>Design notes:</strong> This is the longest screen. Group visually (heart &amp; metabolic / digestive / hormonal / other) without changing the option values. Sticky Continue.</li>
+<li><strong>API:</strong> <code>other_conditions[]</code> (enum array).</li>
+</ul>
+<h3>Screen 14 — Current medications</h3>
+<ul>
+<li><strong>Headline:</strong> Are you currently taking any medications?</li>
+<li><strong>Subline:</strong> Including weight loss medications, prescriptions, or regular supplements.</li>
+<li><strong>Why we ask:</strong> Providers check this to avoid interactions.</li>
+<li><strong>Field type:</strong> Yes/No → if <strong>Yes</strong>, reveal textarea on same screen.</li>
+<li><strong>Textarea label:</strong> Please list your current medications — name, dose if known, and reason for use if known.</li>
+<li><strong>Textarea placeholder:</strong> e.g., Lisinopril 10mg — blood pressure</li>
+<li><strong>Validation:</strong> Yes/No required. If Yes → textarea must be ≥ 2 characters. <strong>Errors:</strong> "Please choose yes or no." / "Please list at least the medication name — your provider needs this for a safe review."</li>
+<li><strong>API:</strong> <code>current_medications</code> (bool), <code>current_medications_detail</code> (string, required-if-true).</li>
+</ul>
+<h3>Screen 15 — Recent weight-loss medication</h3>
+<ul>
+<li><strong>Headline:</strong> Have you taken any weight loss medication in the past month?</li>
+<li><strong>Why we ask:</strong> Recent medication affects how a provider plans a safe starting point.</li>
+<li><strong>Field type:</strong> Yes/No → if <strong>Yes</strong>, reveal textarea.</li>
+<li><strong>Textarea label:</strong> Please list the medication name, dose if known, and when you last took it.</li>
+<li><strong>Textarea placeholder:</strong> e.g., semaglutide 0.5mg — last dose 2 weeks ago</li>
+<li><strong>Validation/Errors:</strong> Same pattern as Screen 14.</li>
+<li><strong>API:</strong> <code>recent_wl_medication</code> (bool), <code>recent_wl_medication_detail</code> (string, required-if-true).</li>
+</ul>
+<h3>Screen 16 — RightWell value bridge (no inputs)</h3>
+<ul>
+<li><strong>Purpose:</strong> Explain what happens with the data; make the program's value land before the ask.</li>
+<li><strong>Headline:</strong> Here's what RightWell does with your answers.</li>
+<li><strong>Body (bullets):</strong></li>
+<li>We organize your information clearly for licensed provider review.</li>
+<li>Your answers help the care team understand what options may be appropriate for you.</li>
+<li>If treatment is appropriate, your provider guides the plan — and our care team supports you after, not just at signup.</li>
+<li><strong>Required disclaimer (verbatim):</strong> Submission does not guarantee eligibility, treatment, or prescription. A licensed provider makes treatment decisions where applicable.</li>
+<li><strong>CTA:</strong> Continue →</li>
+<li><strong>Design notes:</strong> This is the one "salesy-adjacent" screen — keep it calm; checkmark bullets, no prices, no countdowns.</li>
+<li><strong>API:</strong> <code>value_bridge_viewed</code> event.</li>
+</ul>
+<h3>Screen 17 — Anything else for the provider (optional)</h3>
+<ul>
+<li><strong>Headline:</strong> Anything else you'd like the provider to know?</li>
+<li><strong>Helper:</strong> You can share symptoms, concerns, goals, or anything that may help the provider review your information.</li>
+<li><strong>Field type:</strong> Optional textarea + "Skip" link.</li>
+<li><strong>Validation:</strong> None (optional). Cap 1,000 chars with counter.</li>
+<li><strong>API:</strong> <code>provider_notes</code> (string, optional).</li>
+</ul>
+<h3>Screen 18 — Sleep quality <em>(OPTIONAL — recommended: SKIP as standalone; see §9)</em></h3>
+<ul>
+<li><strong>Headline:</strong> How has your sleep been recently?</li>
+<li><strong>Field type:</strong> 1–5 scale (Very poor → Very good), optional.</li>
+<li><strong>API:</strong> <code>sleep_quality</code> (int 1–5, optional).</li>
+</ul>
+<h3>Screen 19 — Preferences <em>(OPTIONAL — recommended: INCLUDE)</em></h3>
+<ul>
+<li><strong>Headline:</strong> When reviewing options, what matters most to you?</li>
+<li><strong>Why we ask:</strong> This helps tailor what the care team shows you. It doesn't change the medical review.</li>
+<li><strong>Field type:</strong> Multi-select, optional, max 2.</li>
+<li><strong>Options:</strong> Affordability · Potency · Side effect management</li>
+<li><strong>API:</strong> <code>preferences[]</code> (enum array, optional).</li>
+</ul>
+<h3>Screen 20 — Motivation level <em>(OPTIONAL — recommended: INCLUDE)</em></h3>
+<ul>
+<li><strong>Headline:</strong> How are you feeling about reaching your weight goals?</li>
+<li><strong>Field type:</strong> Single-select, optional (auto-advance).</li>
+<li><strong>Options:</strong> I'm ready · I'm feeling hopeful · I'm cautious</li>
+<li><strong>Reassurance:</strong> All three are good answers. The care team meets you where you are.</li>
+<li><strong>API:</strong> <code>motivation_level</code> (enum, optional).</li>
+</ul>
+<h3>Screen 21 — Energy / clarity goals <em>(OPTIONAL — recommended: SKIP at launch; see §9)</em></h3>
+<ul>
+<li><strong>Headline:</strong> Want support with any of these too?</li>
+<li><strong>Options:</strong> Improving cognitive function and mental clarity · Improving energy levels · Improving sleep quality</li>
+<li><strong>API:</strong> <code>secondary_goals[]</code> (enum array, optional).</li>
+</ul>
+<h3>Screen 22 — Final review + consent</h3>
+<ul>
+<li><strong>Headline:</strong> Quick review before you submit.</li>
+<li><strong>Explanation:</strong> Check that everything looks right. A licensed provider will review your answers.</li>
+<li><strong>Summary UI:</strong> Collapsed sections — About you · Health basics · Medical history · Medications — each with an <strong>Edit</strong> link ("Edit" returns to that screen, then back to review).</li>
+<li><strong>Consent checkbox (verbatim, required):</strong> "I confirm my answers are accurate to the best of my knowledge. I consent to the collection and secure transmission of my health information for review by a licensed provider. I understand that submitting this information does not guarantee eligibility, approval, prescription, or treatment."</li>
+<li><strong>Disclaimer (verbatim, displayed):</strong> "This information is for educational purposes only and is not medical advice. Always consult a licensed healthcare provider."</li>
+<li><strong>Validation:</strong> Checkbox required; all mandatory fields complete (server-verified) before submit is enabled. <strong>Error:</strong> "Please review and confirm the consent statement to submit."</li>
+<li><strong>CTA:</strong> Submit for provider review →</li>
+<li><strong>Design notes:</strong> Submit button shows a loading state; disable double-tap.</li>
+<li><strong>API:</strong> <code>consent_given</code> (bool + timestamp + consent text version <code>consent_v</code>), then full payload POST.</li>
+</ul>
+<h3>Screen 23 — Thank you / next steps</h3>
+<ul>
+<li><strong>Headline:</strong> You're done — here's what happens next.</li>
+<li><strong>Body:</strong></li>
+<li><strong>We organize your information</strong> for licensed provider review.</li>
+<li><strong>A provider or care team reviews your answers.</strong> They may reach out if they need more information.</li>
+<li><strong>You'll hear from us</strong> with your next step and what options may be appropriate.</li>
+<li><strong>Support line:</strong> Questions in the meantime? Our care team is here: [support email / phone].</li>
+<li><strong>Expectation-setting (verbatim):</strong> Submitting your information does not guarantee eligibility, a prescription, or treatment. Treatment decisions are made by licensed providers where applicable.</li>
+<li><strong>What not to expect:</strong> No medication ships before a provider review is complete.</li>
+<li><strong>CTA (if offer follows):</strong> See how the RightWell program works →</li>
+<li><strong>API:</strong> <code>submission_confirmed</code> event; show confirmation ID.</li>
+</ul>
+<hr />
+<h2>2. FIELD &amp; VALIDATION TABLE</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Validation</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>primary_goal</td>
+<td>enum</td>
+<td>Yes</td>
+<td>1 of 3</td>
+<td>auto-advance</td>
+</tr>
+<tr>
+<td>3</td>
+<td>primary_reason</td>
+<td>enum</td>
+<td>Yes</td>
+<td>1 of 4</td>
+<td>auto-advance</td>
+</tr>
+<tr>
+<td>4</td>
+<td>height_feet / height_inches</td>
+<td>int</td>
+<td>Yes</td>
+<td>3–7 / 0–11</td>
+<td>dropdowns</td>
+</tr>
+<tr>
+<td>5</td>
+<td>weight_lbs</td>
+<td>int</td>
+<td>Yes</td>
+<td>50–700</td>
+<td>BMI server-computed</td>
+</tr>
+<tr>
+<td>6</td>
+<td>gender</td>
+<td>enum</td>
+<td>Yes</td>
+<td>male/female</td>
+<td>gates Screen 11</td>
+</tr>
+<tr>
+<td>7</td>
+<td>prior_weight_loss_program</td>
+<td>bool</td>
+<td>Yes</td>
+<td>y/n</td>
+<td>—</td>
+</tr>
+<tr>
+<td>9</td>
+<td>blood_pressure_range</td>
+<td>enum</td>
+<td>Yes</td>
+<td>1 of 5 (incl. unknown)</td>
+<td>unknown → provider follow-up flag</td>
+</tr>
+<tr>
+<td>10</td>
+<td>resting_heart_rate_range</td>
+<td>enum</td>
+<td>Yes</td>
+<td>1 of 5 (incl. unknown)</td>
+<td>same</td>
+</tr>
+<tr>
+<td>11</td>
+<td>pregnancy_status[]</td>
+<td>enum[]</td>
+<td>Yes (F)</td>
+<td>≥1; "none" exclusive</td>
+<td>auto not_applicable (M)</td>
+</tr>
+<tr>
+<td>12</td>
+<td>severe_conditions[]</td>
+<td>enum[]</td>
+<td>Yes</td>
+<td>≥1; "none" exclusive</td>
+<td>988 line on suicidality select</td>
+</tr>
+<tr>
+<td>13</td>
+<td>other_conditions[]</td>
+<td>enum[]</td>
+<td>Yes</td>
+<td>≥1; "none" exclusive</td>
+<td>grouped layout</td>
+</tr>
+<tr>
+<td>14</td>
+<td>current_medications (+detail)</td>
+<td>bool + text</td>
+<td>Yes (+if-yes)</td>
+<td>detail ≥2 chars if yes</td>
+<td>—</td>
+</tr>
+<tr>
+<td>15</td>
+<td>recent_wl_medication (+detail)</td>
+<td>bool + text</td>
+<td>Yes (+if-yes)</td>
+<td>detail ≥2 chars if yes</td>
+<td>—</td>
+</tr>
+<tr>
+<td>17</td>
+<td>provider_notes</td>
+<td>text</td>
+<td>No</td>
+<td>≤1,000 chars</td>
+<td>skip link</td>
+</tr>
+<tr>
+<td>19</td>
+<td>preferences[]</td>
+<td>enum[]</td>
+<td>No</td>
+<td>≤2</td>
+<td>recommended</td>
+</tr>
+<tr>
+<td>20</td>
+<td>motivation_level</td>
+<td>enum</td>
+<td>No</td>
+<td>1 of 3</td>
+<td>recommended</td>
+</tr>
+<tr>
+<td>22</td>
+<td>consent_given</td>
+<td>bool</td>
+<td>Yes</td>
+<td>must be true</td>
+<td>timestamp + version</td>
+</tr>
+</tbody>
+</table>
+<h2>3. CONDITIONAL LOGIC TABLE</h2>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Condition</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gender</td>
+<td>= Male</td>
+<td>Skip Screen 11; set <code>pregnancy_status = [not_applicable]</code></td>
+</tr>
+<tr>
+<td>Gender</td>
+<td>= Female</td>
+<td>Show Screen 11</td>
+</tr>
+<tr>
+<td>Current medications</td>
+<td>= Yes</td>
+<td>Reveal required <code>current_medications_detail</code> textarea</td>
+</tr>
+<tr>
+<td>Recent WL medication</td>
+<td>= Yes</td>
+<td>Reveal required <code>recent_wl_medication_detail</code> textarea</td>
+</tr>
+<tr>
+<td>Severe conditions</td>
+<td>includes suicidality option</td>
+<td>Show supportive 988 resource line (non-blocking; copy via legal/clinical)</td>
+</tr>
+<tr>
+<td>"None of the above" (11/12/13)</td>
+<td>selected</td>
+<td>Deselect all others; selecting any other deselects "None"</td>
+</tr>
+<tr>
+<td>Clinical partner hard-stop rules (if supplied)</td>
+<td>per partner spec</td>
+<td>Route to compassionate off-ramp screen (§10); never auto-display in-quiz rejection without partner-approved copy</td>
+</tr>
+<tr>
+<td>All mandatory complete</td>
+<td>server check</td>
+<td>Enable Submit on Screen 22</td>
+</tr>
+</tbody>
+</table>
+<h2>4. API &amp; DATA HANDLING NOTES</h2>
+<ul>
+<li><strong>Submission:</strong> Single POST of the full validated payload at Screen 22 only. No partial health-data submission to the clinical API.</li>
+<li><strong>Environments:</strong> Sandbox + production keys; environment switch by config, never by code edit. Mock submissions against sandbox in CI.</li>
+<li><strong>Keys:</strong> Stored only in the approved secrets manager / credential vault. Never in Drive, sheets, screenshots, design files, docs, or the repo.</li>
+<li><strong>Payload:</strong> snake_case fields as mapped above + <code>intake_session_id</code>, <code>consent_v</code>, <code>consent_timestamp</code>, <code>submitted_at</code>, UTM/click IDs (non-health) if consented.</li>
+<li><strong>Verification:</strong> After POST, confirm 2xx + returned record ID; persist confirmation ID; display on Screen 23.</li>
+<li><strong>Failure handling:</strong> Retain answers locally (encrypted/session), show recoverable error ("We couldn't submit just now — your answers are saved. Try again."), retry with backoff, alert ops after N failures.</li>
+<li><strong>Abandonment tracking:</strong> Screen-level progress events only (screen number, timestamps) where legally permitted; <strong>no health answers</strong> in analytics events.</li>
+<li><strong>Ad platforms:</strong> No sensitive health data to ad platforms without legal approval. Conversion events limited to non-health signals (e.g., "intake_submitted") and only per legal sign-off.</li>
+<li><strong>Follow-up:</strong> Email/SMS follow-up only where proper consent exists (contact-capture consent is collected outside this quiz spec or added as a compliant contact screen before Screen 22 if growth requires it — copy must mirror Screen 22 consent standards).</li>
+</ul>
+<h2>5. ERROR MESSAGE LIBRARY</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Empty single-select</td>
+<td>"Please choose an option to continue."</td>
+</tr>
+<tr>
+<td>Empty multi-select</td>
+<td>"Please select any that apply, or 'None of the above.'"</td>
+</tr>
+<tr>
+<td>Missing height</td>
+<td>"Please enter your height so a provider can review safely."</td>
+</tr>
+<tr>
+<td>Missing weight</td>
+<td>"Please enter your weight to continue."</td>
+</tr>
+<tr>
+<td>Weight out of range</td>
+<td>"That doesn't look right — please double-check your weight in pounds."</td>
+</tr>
+<tr>
+<td>Missing medication detail</td>
+<td>"Please list at least the medication name — your provider needs this for a safe review."</td>
+</tr>
+<tr>
+<td>Consent unchecked</td>
+<td>"Please review and confirm the consent statement to submit."</td>
+</tr>
+<tr>
+<td>Network/submit failure</td>
+<td>"We couldn't submit just now — your answers are saved. Please try again in a moment."</td>
+</tr>
+<tr>
+<td>Repeated failure</td>
+<td>"Something's not working on our end. Your answers are saved — our care team has been notified."</td>
+</tr>
+</tbody>
+</table>
+<p>Tone rules: never blame the user, always say why the field matters, never use red-alarm language for health answers.</p>
+<h2>6. MOBILE UX NOTES</h2>
+<ul>
+<li>390px-first. Sticky Continue above the keyboard. Auto-advance single-selects (no double-tap).</li>
+<li>Option buttons ≥ 56px tall, full-width, one per row.</li>
+<li>Progress bar always visible; never resets visually on conditional skips.</li>
+<li>Numeric keypad for weight; dropdown wheels for height/DOB-style inputs.</li>
+<li>Long checklists (Screens 12–13): visual grouping headers, sticky Continue, no pagination (don't split mandatory lists).</li>
+<li>Trust strip persists in header on every screen (the single biggest gap vs competitors today).</li>
+<li>Transition screens (8, 16) are skippable in under 2 seconds — one tap, no scroll.</li>
+</ul>
+<h2>7. COMPLIANCE-SAFE DISCLAIMER &amp; CONSENT COPY (canonical)</h2>
+<ul>
+<li><strong>Consent (Screen 22):</strong> see verbatim copy above.</li>
+<li><strong>Disclaimer (Screens 16, 22, 23):</strong> "This information is for educational purposes only and is not medical advice. Always consult a licensed healthcare provider."</li>
+<li><strong>Expectation line (16, 23, offer bridge):</strong> "Submission does not guarantee eligibility, treatment, or prescription. A licensed provider makes treatment decisions where applicable."</li>
+<li><strong>Privacy line (header/footer):</strong> "Your health information is protected and used only for your review and care."</li>
+<li>Supports HIPAA-style safeguards and LegitScript review posture: no guaranteed outcomes, no drug-inclusion implication, provider-decision language throughout, consent recorded with version + timestamp.</li>
+</ul>
+<h2>8. RIGHTWELL VALUE BRIDGE COPY (Screen 16 canonical)</h2>
+<blockquote>
+<p><strong>Here's what RightWell does with your answers.</strong>
+✓ We organize your information clearly for licensed provider review.
+✓ Your answers help the care team understand what options may be appropriate for you.
+✓ If treatment is appropriate, your provider guides the plan — and our care team supports you along the way.
+<em>Submission does not guarantee eligibility, treatment, or prescription. A licensed provider makes treatment decisions where applicable.</em></p>
+</blockquote>
+<h2>9. OPTIONAL QUESTIONS — RECOMMENDATION</h2>
+<table>
+<thead>
+<tr>
+<th>Optional screen</th>
+<th>Recommendation</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>19 Preferences</td>
+<td><strong>Include</strong></td>
+<td>One tap, real routing value for what the care team presents; mirrors proven competitor pattern</td>
+</tr>
+<tr>
+<td>20 Motivation level</td>
+<td><strong>Include</strong></td>
+<td>One tap, ends intake on a positive self-commitment beat</td>
+</tr>
+<tr>
+<td>18 Sleep quality</td>
+<td><strong>Skip standalone</strong></td>
+<td>Marginal provider value at intake; mention sleep in Screen 17 helper instead</td>
+</tr>
+<tr>
+<td>21 Energy/clarity goals</td>
+<td><strong>Skip at launch</strong></td>
+<td>Adds a screen for upsell data we can collect post-submission; revisit as an A/B later</td>
+</tr>
+</tbody>
+</table>
+<p>Net: 2 optional screens included → ~19 user-visible screens for women, ~18 for men. Still the shortest guided intake in the set.</p>
+<h2>10. OFF-RAMP TEMPLATE (only if clinical partner supplies hard-stop rules)</h2>
+<blockquote>
+<p><strong>Thanks for being upfront — that keeps you safe.</strong>
+Based on your answers, this program may not be appropriate right now. That's a safety decision, not a judgment.
+We recommend speaking with your own healthcare provider about options that fit your situation.
+<em>(Optional, if true:)</em> If your situation changes, you're welcome back anytime.</p>
+</blockquote>
+<p>No selling on this screen. No alternatives pitched unless legal approves.</p>
+<h2>11. RIGHTWELL OFFER BRIDGE COPY (post-submission, if payment follows)</h2>
+<blockquote>
+<p><strong>Your information is in. Here's how the RightWell program works.</strong>
+• A licensed provider reviews your health information. If treatment is appropriate for you, they decide the plan.
+• Your membership covers: provider review and visits, ongoing care-team support, dosage guidance, and shipping coordination. <em>(Adjust to the true inclusion list — only state what's actually included.)</em>
+• <strong>What's not guaranteed:</strong> eligibility, a prescription, or specific results. If a provider determines treatment isn't appropriate, [state the true refund/no-charge policy plainly].
+• You can cancel according to the plan terms shown before payment.
+<strong>CTA:</strong> See plans →</p>
+</blockquote>
+<p>Rule: the price screen may use real promotions with real end dates. No fabricated counters, no expiring "approvals," no "you are approved" before provider review — use "Pre-qualified for provider review" framing at most, only if legal approves.</p>
+<h2>12. SECURE STORAGE / PROJECT ORGANIZATION (build note)</h2>
+<p>Organize supporting materials into: Intake Form Fields · Mandatory Questions · Optional Questions · API Documentation · Compliance and Certification · Privacy Compliance Documents · Design Materials · Design Review Feedback · Testing and Reports · Test Data and Results · Remarketing Approval Logs.
+<strong>API keys live only in the approved secrets manager.</strong> Never in Drive, shared folders, spreadsheets, screenshots, design files, or documentation.</p>
+<h2>13. TESTING CHECKLIST</h2>
+<ul>
+<li>[ ] Every mandatory field blocks submission when missing (server-side, not just UI)</li>
+<li>[ ] Invalid values rejected with the correct library message (height, weight ranges)</li>
+<li>[ ] Multi-selects allow multiple; "None of the above" exclusivity works both directions (11, 12, 13)</li>
+<li>[ ] Male path: Screen 11 skipped, <code>not_applicable</code> set in payload</li>
+<li>[ ] Conditional textareas (14, 15) appear on Yes, required, persist on back/forward</li>
+<li>[ ] Blood pressure + heart rate: all 5 options selectable incl. "I don't know"</li>
+<li>[ ] Edit links on review screen return to correct screen and back to review with state intact</li>
+<li>[ ] Consent: cannot submit unchecked; consent text version + timestamp recorded</li>
+<li>[ ] Mock sandbox submission: payload matches mapping table exactly</li>
+<li>[ ] Sandbox confirmation ID returned and displayed</li>
+<li>[ ] Post-submission data verification against API record</li>
+<li>[ ] Failed submission: answers preserved, retry works, ops alert fires after N failures</li>
+<li>[ ] Error messages match library (no raw API errors shown)</li>
+<li>[ ] Partial-progress events fire with screen numbers only (no health data in analytics)</li>
+<li>[ ] Privacy notice + disclaimer visible on Screens 16/22/23</li>
+<li>[ ] No health fields in any ad-platform event (verify network tab)</li>
+<li>[ ] Mobile: 390px, sticky Continue, keyboard never covers input, auto-advance no double-fire</li>
+<li>[ ] Desktop parity pass</li>
+<li>[ ] Value bridge (16) and offer bridge render correctly and read clearly aloud ("mom test")</li>
+<li>[ ] Full run-through time: target ≤ 3.5 minutes median</li>
+</ul>
+<h2>14. TOP FRICTION RISKS</h2>
+<ol>
+<li><strong>Screens 12–13 checklist fatigue</strong> — two long medical lists back-to-back. Mitigation: grouped layout, reassurance lines, trust strip, progress visibly jumping.</li>
+<li><strong>Weight entry shame moment</strong> — softened with "no judgment" microcopy; never show BMI verdicts.</li>
+<li><strong>Medication textareas</strong> — free text on mobile is the highest-effort input; placeholders show exactly how little is needed.</li>
+<li><strong>Consent wall at the end</strong> — keep it one checkbox, not three; the review summary above it must feel like progress, not paperwork.</li>
+<li><strong>Transition screens overstaying</strong> — both must be one-tap skims; if analytics show drop there, cut copy not screens.</li>
+</ol>
+<h2>15. TOP COMPLIANCE RISKS</h2>
+<ol>
+<li>Any "approved / qualified / prescribed" leakage into headlines — banned by spec; QA greps copy for these words.</li>
+<li>Implying medication is included in membership if it isn't — offer bridge must state the true inclusion list.</li>
+<li>BMI-based "you're a great candidate" messaging mid-quiz — not allowed; provider decides.</li>
+<li>Analytics/pixels receiving health answers — engineering gate + network-tab audit in testing.</li>
+<li>Off-ramp copy improvised without clinical/legal sign-off — use §10 template only after approval.</li>
+</ol>
+<h2>16. TOP CONVERSION IMPROVEMENTS (vs current RightWell intake)</h2>
+<ol>
+<li>Persistent trust strip on every screen (today: logo only).</li>
+<li>"Why we ask" microcopy on every clinical question (today: none).</li>
+<li>Value bridge before review (today: quiz dumps straight to checkout page).</li>
+<li>Reassurance lines before/within the two big medical checklists.</li>
+<li>Final review + single consent (today: consent is implied at contact capture) — cleaner data, stronger legal posture, and the review screen itself reduces "what did I just send?" anxiety.</li>
+<li>Optional preferences + motivation taps keep the guided feel without adding effort.</li>
+</ol>
+<h2>17. FINAL BUILD CHECKLIST</h2>
+<ul>
+<li>[ ] Copy deck approved (this doc) — growth + compliance sign-off</li>
+<li>[ ] Clinical partner confirms: mandatory list unchanged, "I don't know" allowed on BP/HR, off-ramp rules + copy</li>
+<li>[ ] Legal sign-off: consent text, disclaimers, 988 line, offer bridge inclusion list</li>
+<li>[ ] Design: 23-screen mobile flow in brand kit (periwinkle #959CFF / indigo #39345C), trust strip component, grouped checklist component</li>
+<li>[ ] Engineering: field mapping, conditional logic, sandbox integration, secrets in vault</li>
+<li>[ ] Analytics: screen-progress events only; ad-event allowlist reviewed by legal</li>
+<li>[ ] Full testing checklist (§13) passed on mobile + desktop</li>
+<li>[ ] Soft launch behind a traffic split vs current intake; primary metric = completed submissions per visitor; guardrails = provider-flagged data quality, refund rate</li>
+</ul></div></body></html>
